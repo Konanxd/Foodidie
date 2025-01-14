@@ -42,13 +42,13 @@ export default function Test() {
                 <img
                     src={'../assets/hero2.png'}
                     alt="Foodidie"
-                    width={400}
-                    height={400}
+                    width={350}
+                    height={350}
                 />
-                <div className="flex-row items-center justify-center border-black">
-                    <div className="flex flex-col space-y-4">
+                <div className="flex flex-row items-center justify-center border-black pl-24">
+                    <div className="flex flex-col justify-center space-y-4">
                         <div className="poppins-semibold text-4xl">
-                            Why choose &nbsp;
+                            Why choose&nbsp;
                             <span className="text-[#6AA78D]">Food</span>
                             <span className="text-[#1D1D35]">idie</span>?
                         </div>
@@ -57,51 +57,54 @@ export default function Test() {
                                 <img
                                     src={'../assets/burger-icon.png'}
                                     alt="Foodidie"
+                                    className="object-contain"
                                     width={60}
                                     height={60}
                                 />
-                                <div className="flex flex-col">
-                                    <span className="poppins-semibold text-xl">
+                                <div className="flex max-w-lg flex-col gap-3">
+                                    <span className="poppins-semibold text-2xl">
                                         Personalized Recipes
                                     </span>
-                                    <span className="poppins-regular text-lg text-[#1D1D35]">
+                                    <p className="poppins-regular text-xl text-[#1D1D35]">
                                         Discover dishes based on your taste and
                                         preference
-                                    </span>
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex flex-row gap-6">
                                 <img
                                     src={'../assets/taco-icon.png'}
                                     alt="Foodidie"
+                                    className="object-contain"
                                     width={60}
                                     height={60}
                                 />
-                                <div className="flex flex-col">
-                                    <span className="poppins-semibold text-xl">
+                                <div className="flex max-w-lg flex-col gap-3">
+                                    <span className="poppins-semibold text-2xl">
                                         Global Cuisine
                                     </span>
-                                    <span className="poppins-regular text-lg text-[#1D1D35]">
+                                    <p className="poppins-regular text-xl text-[#1D1D35]">
                                         Access a wide variety of recipes from
                                         around the world
-                                    </span>
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex flex-row gap-6">
                                 <img
                                     src={'../assets/cheese-icon.png'}
                                     alt="Foodidie"
+                                    className="object-contain"
                                     width={60}
                                     height={60}
                                 />
-                                <div className="flex flex-col">
-                                    <span className="poppins-semibold text-xl">
+                                <div className="flex max-w-lg flex-col gap-3">
+                                    <span className="poppins-semibold text-2xl">
                                         Quick and Easy
                                     </span>
-                                    <span className="poppins-regular text-lg text-[#1D1D35]">
+                                    <p className="poppins-regular text-xl text-[#1D1D35]">
                                         Save time with our efficient search and
                                         filers
-                                    </span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
