@@ -4,7 +4,7 @@ export default function NavBar({ navItems }) {
     return (
         <nav className="flex w-full">
             <div className="container m-auto flex max-w-6xl items-center justify-between px-12 py-7 font-poppins">
-                <h1 className="text-4xl font-bold">
+                <h1 className="text-3xl font-bold">
                     <span className="text-[#6AA78D]">Food</span>
                     <span className="text-[#1D1D35]">idie</span>
                 </h1>

@@ -10,7 +10,7 @@ export default function NavLink({
         <Link
             {...props}
             className={
-                'text-xl text-black'
+                'text-l text-black'
                 // +
                 // (active
                 //     ? 'border-indigo-400 text-gray-900 focus:border-indigo-700'
