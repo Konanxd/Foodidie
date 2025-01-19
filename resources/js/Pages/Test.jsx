@@ -8,7 +8,7 @@ export default function Test() {
         { path: '/about', label: 'About' },
     ];
     return (
-        <div>
+        <div className='bg-[#F7FEF8] font-poppins'>
             <div>
                 <NavBar navItems={navItems} />
             </div>
@@ -22,7 +22,7 @@ export default function Test() {
                         <h1 className="poppins-bold text-5xl">
                             Recipes for Every Mood!
                         </h1>
-                        <p className="font-poppins py-4 text-2xl tracking-tighter text-gray-500">
+                        <p className="py-4 text-xl tracking-tighter text-gray-500">
                             Find the perfect recipe for any occasion, from quick
                             snacks to gourmet meals, tailored just for you.
                         </p>
