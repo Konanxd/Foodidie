@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecipesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,9 +23,7 @@ Route::get('/test', function () {
     return Inertia::render('Test');
 })->name('test');
 
-Route::get('/recipes', function () {
-    return Inertia::render('Recipes');
-})->name('recipes');
+Route::get('/recipes', [RecipesController::class, 'index'])->name('recipes');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

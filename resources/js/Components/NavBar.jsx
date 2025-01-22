@@ -10,7 +10,9 @@ export default function NavBar({ navItems }) {
                 </h1>
                 <div className="flex gap-12">
                     {navItems.map((item, index) => (
-                        <NavLink key={index}>{item.label}</NavLink>
+                        <NavLink href={item.path} key={index}>
+                            {item.label}
+                        </NavLink>
                     ))}
                 </div>
             </div>

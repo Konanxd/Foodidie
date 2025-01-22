@@ -1,18 +1,18 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Link } from '@inertiajs/react';
+import NavBar from '@/Components/NavBar';
 
 export default function GuestLayout({ children }) {
+    const navItems = [
+        { path: '/', label: 'Home' },
+        { path: '/recipes', label: 'Recipes' },
+        { path: '/about', label: 'About' },
+    ];
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
+        <div className="flex min-h-screen flex-col">
             <div>
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
-                </Link>
+                <NavBar navItems={navItems} />
             </div>
 
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
-                {children}
-            </div>
+            <div className="w-full bg-[#F7FEF8] font-poppins">{children}</div>
         </div>
     );
 }
