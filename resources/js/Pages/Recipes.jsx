@@ -1,8 +1,16 @@
 import Footer from '@/Components/Footer';
+import IngredientAutocomplete from '@/Components/IngredientAutocomplete';
+import Tag from '@/Components/Tag';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+
+const toTitleCase = (str) => {
+    return str.replace(/\w\S*/g, (word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+};
 
 export default function Recipes() {
     const { recipes = [], searchQuery } = usePage().props;
@@ -12,35 +20,61 @@ export default function Recipes() {
         router.get('/recipes', { title });
     };
 
+    const [ingredients] = useState([
+        'Tumeric',
+        'Powder',
+        'Salt',
+        'Water',
+        'Chillis',
+        'Shallots',
+        'Cloves',
+        'Ginger',
+        'Lemongrass',
+        'Galangal',
+        'Turmeric',
+        'Cumin Seeds',
+        'Coconut Milk',
+        'Coconut Milk',
+        'Tea Leaf',
+        'Grounded Coconut',
+        'Cooking Oil',
+    ]);
+
+    const handleTagsChange = (selectedTags) => {
+        console.log('Selected Tags:', selectedTags);
+    };
+
     return (
         <GuestLayout>
             <section>
-            <div className="bg-[#E5FFE8] pt-16 pb-4">
-                <h1 className="text-2xl mx-28 poppins-bold text-gray-800 mb-4">Explore Recipes</h1>
-                <div className="bg-white mx-28 rounded-xl max-w-7xl">
-                    <div className="relative">
-                        <TextInput
-                        type="text"
-                        placeholder="Search Recipe Here"
-                        className="h-14 w-full rounded-xl border border-gray-50 pl-4 pr-14 py-2 focus:outline-none focus:ring-2 focus:ring-[#6AA78D]"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        />
+                <div className="bg-[#E5FFE8] pb-4 pt-16">
+                    <h1 className="poppins-bold mx-28 mb-4 text-2xl text-gray-800">
+                        Explore Recipes
+                    </h1>
+                    <div className="mx-28 max-w-7xl rounded-xl bg-white">
+                        <div className="relative">
+                            <TextInput
+                                type="text"
+                                placeholder="Search Recipe Here"
+                                className="h-14 w-full rounded-xl border border-gray-50 py-2 pl-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6AA78D]"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
 
-                        <button
-                        onClick={handleSearch}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 h-10 w-10 flex items-center justify-center"
-                        >
-                        <img
-                            src={'../assets/search-button.png'}
-                            alt="Search Button"
-                            className="object-contain"
-                            width={24}
-                            height={24}
-                        />
-                        </button>
+                            <button
+                                onClick={handleSearch}
+                                className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 transform items-center justify-center"
+                            >
+                                <img
+                                    src={'../assets/search-button.png'}
+                                    alt="Search Button"
+                                    className="object-contain"
+                                    width={24}
+                                    height={24}
+                                />
+                            </button>
+                        </div>
                     </div>
-                </div>
                 </div>
             </section>
 
@@ -49,19 +83,15 @@ export default function Recipes() {
                     <h2 className="poppins-bold mx-28 mb-4 text-xl text-gray-800">
                         Search By Ingredients
                     </h2>
-                    <div className="mx-28 my-4 rounded-xl max-w-7xl">
+                    <div className="mx-28 my-4 max-w-7xl rounded-xl">
                         <div className="flex items-center space-x-4">
-
-                            <TextInput
-                            type="text"
-                            placeholder='Example: “Apple, Flour, Sugar”'
-                            className="bg-white h-14 flex-1 rounded-xl border border-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6AA78D]"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            <IngredientAutocomplete
+                                ingredients={ingredients}
+                                onTagsChange={handleTagsChange}
                             />
                             <button
-                            onClick={handleSearch}
-                            className="h-14 w-28 rounded-2xl bg-[#6AA78D] flex items-center justify-center text-l text-white"
+                                onClick={handleSearch}
+                                className="text-l flex h-14 w-28 items-center justify-center rounded-2xl bg-[#6AA78D] text-white"
                             >
                                 Search
                             </button>
@@ -70,13 +100,24 @@ export default function Recipes() {
 
                     <div className="mx-28 flex max-w-7xl flex-wrap gap-4">
                         {[
-                            'Apple', 'Sugar', 'Flour', 'Salt', 'Trimmed rhubarb',
-                            'Noodles', 'Onion', 'Unsalted butter', 'Butter',
-                            'Blueberry', 'Lemon', 'Nutmeg', 'Egg', 'Beef',
+                            'Apple',
+                            'Sugar',
+                            'Flour',
+                            'Salt',
+                            'Trimmed rhubarb',
+                            'Noodles',
+                            'Onion',
+                            'Unsalted butter',
+                            'Butter',
+                            'Blueberry',
+                            'Lemon',
+                            'Nutmeg',
+                            'Egg',
+                            'Beef',
                         ].map((category, index) => (
                             <button
                                 key={index}
-                                className="bg-white rounded-full border-2 border-[#6AA78D] px-4 py-2 text-[#6AA78D] hover:bg-[#6AA78D] hover:text-white"
+                                className="rounded-full border-2 border-[#6AA78D] bg-white px-4 py-2 text-[#6AA78D] hover:bg-[#6AA78D] hover:text-white"
                             >
                                 {category}
                             </button>
@@ -96,132 +137,69 @@ export default function Recipes() {
                         {recipes.map((recipe) => (
                             <div
                                 key={recipe.id}
-                                className="overflow-hidden rounded-lg bg-white shadow-md"
+                                className="overflow-hidden rounded-xl bg-white shadow-sm"
                             >
-                                <img
-                                    src={
-                                        'https://img.spoonacular.com/recipes/' +
-                                        recipe.id +
-                                        '-556x370.jpg'
-                                    }
-                                    alt="Recipe"
-                                    className="h-48 w-full object-cover"
-                                />
+                                <div className="relative">
+                                    <img
+                                        src={recipe.image}
+                                        alt={recipe.title}
+                                        className="h-48 w-full object-cover"
+                                    />
+                                    <button className="absolute right-3 top-3 rounded-full p-2 shadow-md backdrop-blur-lg">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5 text-white hover:text-red-500"
+                                            fill="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                        </svg>
+                                    </button>
+                                </div>
                                 <div className="p-6">
-                                    <div className="mb-2 flex items-center text-sm text-gray-500">
-                                        <span className="mr-4 flex items-center">
+                                    <h3 className="text-lg font-semibold text-gray-800">
+                                        {recipe.title}
+                                    </h3>
+                                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                                        <div className="flex items-center">
                                             <img
                                                 src={'../assets/time-icon.png'}
                                                 alt="Time"
                                                 className="mr-1 object-contain"
-                                                width={24}
-                                                height={24}
+                                                width={18}
+                                                height={18}
                                             />
                                             {recipe.readyInMinutes} Minutes
-                                        </span>
-                                        <span className="flex items-center">
+                                        </div>
+                                        <div className="ml-4 flex items-center">
                                             <img
                                                 src={
                                                     '../assets/calories-icon.png'
                                                 }
-                                                alt="Clories"
+                                                alt="Calories"
                                                 className="mr-1 object-contain"
-                                                width={24}
-                                                height={24}
+                                                width={18}
+                                                height={18}
                                             />
-                                            {recipe.calories} Kcal
-                                        </span>
+                                            {recipe.nutritions[0].amount} Kcal
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col gap-3">
-                                        <h3 className="text-lg font-bold text-gray-800">
-                                            {recipe.title}
-                                        </h3>
-                                        <p
-                                            className="line-clamp-3 h-16 text-sm text-gray-600"
-                                            dangerouslySetInnerHTML={{
-                                                __html: recipe.summary,
-                                            }}
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        <Tag
+                                            excludeTags={('salt', 'water')}
+                                            tags={recipe.ingredients.map(
+                                                (ingredient) =>
+                                                    toTitleCase(
+                                                        ingredient.name,
+                                                    ),
+                                            )}
                                         />
-                                        <a
-                                            href="#"
-                                            className="mt-2 inline-block text-sm text-[#6AA78D] hover:underline"
-                                        >
-                                            See Recipes...
-                                        </a>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
-            </section>
-
-            {/* Updated Card! */}
-            <section>
-            <div className="grid grid-cols-3 gap-6 mx-28 my-10">
-                {[1, 2, 3].map((item, index) => (
-                    <div
-                    key={index}
-                    className="rounded-xl bg-white shadow-sm overflow-hidden"
-                    >
-                    <div className="relative">
-                        <img
-                        src="https://cookingwithdog.com/wp-content/uploads/2017/03/tamagoyaki-00.jpg"
-                        alt="Telur Dadar"
-                        className="w-full h-48 object-cover"
-                        />
-                        <button className="absolute top-3 right-3 backdrop-blur-lg p-2 rounded-full shadow-md">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 text-white hover:text-red-500"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                        </svg>
-                        </button>
-                    </div>
-
-                    <div className="p-6">
-                        <h3 className="text-lg font-semibold text-gray-800">Tamagoyaki</h3>
-                        <div className="flex items-center text-sm text-gray-500 mt-2">
-                        <div className="flex items-center">
-                        <img
-                            src={'../assets/time-icon.png'}
-                            alt="Time"
-                            className="mr-1 object-contain"
-                            width={18}
-                            height={18}
-                            />
-                            10 Minutes
-                        </div>
-                        <div className="ml-4 flex items-center">
-                        <img
-                            src={'../assets/calories-icon.png'}
-                            alt="Calories"
-                            className="mr-1 object-contain"
-                            width={18}
-                            height={18}
-                            />
-                            450 Kcal
-                        </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2 mt-4">
-                        {['Egg', 'Salt', 'Scallion'].map((tag, i) => (
-                            <span
-                            key={i}
-                            className="rounded-full bg-gray-100 px-4 py-1 text-sm text-gray-600"
-                            >
-                            {tag}
-                            </span>
-                        ))}
-                        </div>
-                    </div>
-                    </div>
-                ))}
-                </div>
-
             </section>
 
             <section>

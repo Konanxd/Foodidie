@@ -21,48 +21,55 @@ class SpoonacularService
     public function searchRecipes(string $title)
     {
         $cacheKey = "recipes_search_{$title}";
-        $recipes = Http::get($this->baseUrl . "recipes/search", [
+
+        // if (Cache::has($cacheKey)) {
+        //     return Cache::get($cacheKey);
+        // }
+
+        $recipes = Http::get($this->baseUrl . "recipes/complexSearch", [
             'apiKey' => $this->apiKey,
             'query' => $title,
-            'fields' => 'id,title,readyInMinutes,servings'
+            'fillIngredients' => 'true',
+            'addRecipeNutrition' => 'true',
+            'addRecipeInstructions' => 'true',
+            'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
         ]);
 
         if (!$recipes->successful()) {
             return [];
         }
 
-        $results = $recipes->json('results') ?? [];
-        $ids = collect($results)->pluck('id')->toArray();
+        // $results = $recipes->json('results') ?? [];
 
-        $bulk = Http::get($this->baseUrl . "recipes/informationBulk", [
-            'apiKey' => $this->apiKey,
-            'includeNutrition' => 'true',
-            'ids' => implode(',', $ids),
-            'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients, summary',
-        ]);
+        $response = collect($recipes->json('results'))->map(function ($recipe) {
+            // $calories = collect($recipe['nutrition']['nutrients'])
+            //     ->where('name', 'Calories')
+            //     ->pluck('amount')
+            //     ->first();
 
-        if (!$bulk->successful()) {
-            return [];
-        }
-
-        return collect($bulk->json())->map(function ($recipe) {
-            $calories = collect($recipe['nutrition']['nutrients'])
-                ->where('name', 'Calories')
-                ->pluck('amount')
-                ->first();
+            // $ingredients = collect($recipe['missedIngredients'])
+            //     ->pluck('id')
+            //     ->toArray();
 
             // dd($recipe);
 
             return [
                 'id' => $recipe['id'],
                 'title' => $recipe['title'],
-                'summary' => $recipe['summary'],
                 'readyInMinutes' => $recipe['readyInMinutes'],
                 'servings' => $recipe['servings'],
                 'image' => $recipe['image'],
-                'calories' => $calories ?? 0,
+                'nutritions' => $recipe['nutrition']['nutrients'],
+                'ingredients' => $recipe['nutrition']['ingredients'],
+                'instruction' => $recipe['analyzedInstructions']
             ];
         })->toArray();
+
+        // dd($response);
+
+        // Cache::put($cacheKey, $response, now()->addHours(1));
+
+        return $response;
     }
 
     public function searchRecipesByIngredients(array $ingredients)
@@ -84,7 +91,7 @@ class SpoonacularService
             'apiKey' => $this->apiKey,
             'includeNutrition' => 'true',
             'ids' => implode(',', $ids),
-            'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients, summary',
+            'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients',
         ]);
 
         if (!$bulk->successful()) {
@@ -102,7 +109,6 @@ class SpoonacularService
             return [
                 'id' => $recipe['id'],
                 'title' => $recipe['title'],
-                'summary' => $recipe['summary'],
                 'readyInMinutes' => $recipe['readyInMinutes'],
                 'servings' => $recipe['servings'],
                 'image' => $recipe['image'],
