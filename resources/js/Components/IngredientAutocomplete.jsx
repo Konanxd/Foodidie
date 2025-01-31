@@ -16,11 +16,13 @@ const fetchIngredients = async (query) => {
     }
 };
 
-const IngredientAutocomplete = ({ onTagsChange }) => {
+const IngredientAutocomplete = ({ onTagsChange, selectedIngredients }) => {
     const [inputValue, setInputValue] = useState('');
-    const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState(selectedIngredients || []);
     const [ingredients, setIngredients] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
+
+    console.log(selectedTags);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,7 +51,7 @@ const IngredientAutocomplete = ({ onTagsChange }) => {
             onTagsChange(newTags);
         }
         setInputValue('');
-        setIngredients([]);
+        setSuggestions([]);
     };
 
     const handleRemoveTag = (tag) => {
@@ -82,20 +84,15 @@ const IngredientAutocomplete = ({ onTagsChange }) => {
                 </div>
             )}
 
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="my-4 flex max-w-7xl flex-wrap gap-4">
                 {selectedTags.map((tag, index) => (
-                    <div
+                    <button
                         key={index}
-                        className="flex items-center rounded-full bg-gray-200 px-3 py-1 text-sm"
+                        onClick={() => handleRemoveTag(tag)}
+                        className="rounded-full border-2 border-[#6AA78D] bg-white px-4 py-2 text-[#6AA78D] hover:bg-[#6AA78D] hover:text-white"
                     >
                         {tag}
-                        <button
-                            onClick={() => handleRemoveTag(tag)}
-                            className="ml-2 rounded-full bg-gray-300 p-1 hover:bg-gray-400"
-                        >
-                            ×
-                        </button>
-                    </div>
+                    </button>
                 ))}
             </div>
         </div>

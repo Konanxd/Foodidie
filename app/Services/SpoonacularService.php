@@ -18,7 +18,7 @@ class SpoonacularService
         $this->baseUrl = "https://api.spoonacular.com/";
     }
 
-    public function searchRecipes(string $title)
+    public function searchRecipes(string $title, array $ingredients)
     {
         $cacheKey = "recipes_search_{$title}";
 
@@ -26,12 +26,17 @@ class SpoonacularService
         //     return Cache::get($cacheKey);
         // }
 
+        $stringIngredients = empty($ingredients) ? '' : implode(',', $ingredients);
+
+        $title = empty($title) ? '' :  $title;
+
         $recipes = Http::get($this->baseUrl . "recipes/complexSearch", [
             'apiKey' => $this->apiKey,
             'query' => $title,
             'fillIngredients' => 'true',
             'addRecipeNutrition' => 'true',
             'addRecipeInstructions' => 'true',
+            'includeIngredients' => $stringIngredients,
             'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
         ]);
 

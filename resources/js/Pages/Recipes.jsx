@@ -4,7 +4,7 @@ import Tag from '@/Components/Tag';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const toTitleCase = (str) => {
     return str.replace(/\w\S*/g, (word) => {
@@ -13,36 +13,27 @@ const toTitleCase = (str) => {
 };
 
 export default function Recipes() {
-    const { recipes = [], searchQuery } = usePage().props;
+    const {
+        recipes = [],
+        searchQuery,
+        selectedIngredients = [],
+    } = usePage().props;
     const [title, setTitle] = useState(searchQuery || '');
+    const [ingredients, setIngredients] = useState([]);
 
-    const handleSearch = () => {
-        router.get('/recipes', { title });
+    const handleSearch = (title, ingredients) => {
+        router.get('/recipes', { title, ingredients });
     };
-
-    const [ingredients] = useState([
-        'Tumeric',
-        'Powder',
-        'Salt',
-        'Water',
-        'Chillis',
-        'Shallots',
-        'Cloves',
-        'Ginger',
-        'Lemongrass',
-        'Galangal',
-        'Turmeric',
-        'Cumin Seeds',
-        'Coconut Milk',
-        'Coconut Milk',
-        'Tea Leaf',
-        'Grounded Coconut',
-        'Cooking Oil',
-    ]);
 
     const handleTagsChange = (selectedTags) => {
+        setIngredients(selectedTags);
         console.log('Selected Tags:', selectedTags);
+        console.log('Ingredients (Before State Update):', ingredients);
     };
+
+    useEffect(() => {
+        console.log('Ingredients (Updated State):', ingredients);
+    }, [ingredients]);
 
     return (
         <GuestLayout>
@@ -84,13 +75,17 @@ export default function Recipes() {
                         Search By Ingredients
                     </h2>
                     <div className="mx-28 my-4 max-w-7xl rounded-xl">
-                        <div className="flex items-center space-x-4">
-                            <IngredientAutocomplete
-                                ingredients={ingredients}
-                                onTagsChange={handleTagsChange}
-                            />
+                        <div className="flex w-full flex-row justify-between gap-2">
+                            <div className="flex w-full items-center space-x-4">
+                                <IngredientAutocomplete
+                                    onTagsChange={handleTagsChange}
+                                    selectedIngredients={selectedIngredients}
+                                />
+                            </div>
                             <button
-                                onClick={handleSearch}
+                                onClick={() =>
+                                    handleSearch(searchQuery, ingredients)
+                                }
                                 className="text-l flex h-14 w-28 items-center justify-center rounded-2xl bg-[#6AA78D] text-white"
                             >
                                 Search
@@ -98,7 +93,7 @@ export default function Recipes() {
                         </div>
                     </div>
 
-                    <div className="mx-28 flex max-w-7xl flex-wrap gap-4">
+                    {/* <div className="mx-28 flex max-w-7xl flex-wrap gap-4">
                         {[
                             'Apple',
                             'Sugar',
@@ -122,7 +117,7 @@ export default function Recipes() {
                                 {category}
                             </button>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
             </section>
             <section>
@@ -186,7 +181,7 @@ export default function Recipes() {
                                     </div>
                                     <div className="mt-4 flex flex-wrap gap-2">
                                         <Tag
-                                            excludeTags={('salt', 'water')}
+                                            excludeTags={'water'}
                                             tags={recipe.ingredients.map(
                                                 (ingredient) =>
                                                     toTitleCase(

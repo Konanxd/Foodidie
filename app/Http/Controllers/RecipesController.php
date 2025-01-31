@@ -17,16 +17,23 @@ class RecipesController extends Controller
 
     public function index(Request $request)
     {
-        $title = $request->input('title');
+        $title = empty($request->input('title')) ? '' : $request->input('title');
+        $ingredients = empty($request->input('ingredients')) ? [] : $request->input('ingredients');
         $recipes = [];
 
-        if ($title) {
-            $recipes = $this->spoonacular->searchRecipes($title);
+        if ($title || !empty($ingredients)) {
+            $recipes = $this->spoonacular->searchRecipes($title, $ingredients);
         }
 
         return Inertia::render('Recipes', [
             'recipes' => $recipes,
             'searchQuery' => $title,
+            'selectedIngredients' => $ingredients
         ]);
+    }
+
+    public function findByIngredients(Request $request)
+    {
+        $ingredients = $request->input('');
     }
 }
