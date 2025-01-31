@@ -18,7 +18,7 @@ export default function Recipes() {
         searchQuery,
         selectedIngredients = [],
     } = usePage().props;
-    const [title, setTitle] = useState(searchQuery || '');
+    const [query, setQuery] = useState(searchQuery || '');
     const [ingredients, setIngredients] = useState([]);
 
     const handleSearch = (title, ingredients) => {
@@ -48,12 +48,14 @@ export default function Recipes() {
                                 type="text"
                                 placeholder="Search Recipe Here"
                                 className="h-14 w-full rounded-xl border border-gray-50 py-2 pl-4 pr-14 focus:outline-none focus:ring-2 focus:ring-[#6AA78D]"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
                             />
 
                             <button
-                                onClick={handleSearch}
+                                onClick={() =>
+                                    handleSearch(query, selectedIngredients)
+                                }
                                 className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 transform items-center justify-center"
                             >
                                 <img
@@ -83,9 +85,7 @@ export default function Recipes() {
                                 />
                             </div>
                             <button
-                                onClick={() =>
-                                    handleSearch(searchQuery, ingredients)
-                                }
+                                onClick={() => handleSearch(query, ingredients)}
                                 className="text-l flex h-14 w-28 items-center justify-center rounded-2xl bg-[#6AA78D] text-white"
                             >
                                 Search
