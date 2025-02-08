@@ -88,8 +88,25 @@ export default function DetailRecipes() {
 
                     {/* Right Section */}
                     <div className="md:col-span-2 space-y-6">
-                        <h2 className="text-4xl font-bold text-gray-800">Telur Dadar</h2>
-
+                    <div className="flex items-center space-x-2">
+                        <h2 className="mr-52 text-4xl font-bold text-gray-800">Telur Dadar</h2>
+                        <div className='group'>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-8 h-8 text-[#679B85] group-hover:text-[#679B85]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                        >
+                            <path
+                            className="group-hover:fill-current group-hover:opacity-80"
+                            fill="none"
+                            d="M6 4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v16l-6-4-6 4V4z"
+                            />
+                        </svg>
+                        </div>
+                        </div>
                         <div className="flex space-x-4 items-center text-gray-500 text-sm">
                             <span className="p-2 text-[#679B85] border border-[#679B85] rounded-md flex items-center">
                                 <img
@@ -211,6 +228,48 @@ export default function DetailRecipes() {
                     </div>
                 </div>
 
+                {/* Comments */}
+                <div className="py-8 my-6">
+                <h2 className="text-2xl font-bold mb-6">Comments</h2>
+                <div className="relative mb-6">
+                    <textarea
+                    className="w-full h-40 bg-transparent p-4 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#679B85]"
+                    rows="3"
+                    placeholder="Write your comment here.."
+                    ></textarea>
+                    <button className="absolute right-4 bottom-4 px-4 py-2 bg-[#679B85] text-white font-semibold rounded-lg hover:bg-green-700">
+                    Submit
+                    </button>
+                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[...Array(4)].map((_, index) => (
+                    <div
+                        key={index}
+                        className="relative p-8 border rounded-lg shadow-sm bg-white"
+                        >
+                            <img
+                                    src={'../assets/quote-icon.png'}
+                                    alt="World"
+                                    className="absolute top-4 right-4 w-8 h-8"
+                                    width={18}
+                                    height={18}
+                                />
+                        <h3 className="text-lg font-semibold">Ahmad kasim</h3>
+                        <p className="mt-2 text-gray-600">
+                        Resepnya bagus, nggak nguwawor. Cocok buat jadi referensi pemula
+                        yang baru nyoba masak.
+                        </p>
+                        <p className="mt-4 text-sm text-gray-500">08 Februari 2025</p>
+                    </div>
+                    ))}
+                </div>
+                <div className="mt-8 text-center">
+                    <button className="text-[#679B85] font-semibold hover:underline">
+                    Load more..
+                    </button>
+                </div>
+                </div>
+
                 {/* Related Recipes */}
                 <div className="my-12">
                     <h3 className="text-2xl font-bold text-gray-800 mb-6">Related Recipes</h3>
@@ -230,7 +289,7 @@ export default function DetailRecipes() {
                                 />
                                 <div className="p-4">
                                     <h4 className="text-lg font-semibold text-gray-800">{recipe.title}</h4>
-                                    <p className="text-green-600 mt-2">See recipe ›</p>
+                                    <p className="text-[#679B85] mt-2">See recipe ›</p>
                                 </div>
                             </a>
                         ))}
