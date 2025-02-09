@@ -36,8 +36,10 @@ class SpoonacularService
                 'addRecipeInstructions' => 'true',
                 'number' => 100,
                 'includeIngredients' => $stringIngredients,
-                'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
+                'fields' => 'id,title,readyInMinutes,creditsText,image,types,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
             ]);
+
+            dd($recipes->json());
 
             if (!$recipes->successful()) {
                 return [];
@@ -48,11 +50,11 @@ class SpoonacularService
                     'id_recipe' => $recipe['id'],
                     'title' => $recipe['title'],
                     'readyInMinutes' => $recipe['readyInMinutes'],
-                    'servings' => $recipe['servings'],
+                    'credits' => $recipe['creditsText'],
                     'image' => $recipe['image'],
                     'nutritions' => $recipe['nutrition']['nutrients'],
                     'ingredients' => $recipe['nutrition']['ingredients'],
-                    'instruction' => $recipe['analyzedInstructions']
+                    'instructions' => $recipe['analyzedInstructions']
                 ];
             })->toArray();
         });

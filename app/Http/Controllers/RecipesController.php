@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\Comment;
 use App\Models\Bookmark;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\SearchHistory;
 use App\Services\SpoonacularService;
@@ -34,6 +36,21 @@ class RecipesController extends Controller
             'recipes' => $recipes,
             'searchQuery' => $title,
             'selectedIngredients' => $ingredients
+        ]);
+    }
+
+    public function details(Request $request, $id_recipe)
+    {
+        $recipe = $request->all();
+
+        $comments = Comment::where('id_recipe', $id_recipe)
+            ->with('user')
+            ->get()
+            ->toArray();
+
+        return Inertia::render('DetailRecipes', [
+            'recipe' => $recipe,
+            'comments' => $comments
         ]);
     }
 

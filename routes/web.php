@@ -27,9 +27,7 @@ Route::get('/test', function () {
 
 Route::get('/recipes', [RecipesController::class, 'index'])->name('recipes');
 
-Route::get('/detail-recipes', function () {
-    return Inertia::render('DetailRecipes');
-})->name('detail-recipes');
+Route::get('/details/{id}', [RecipesController::class, 'details'])->name('detail-recipes');
 
 Route::get('/profile', function () {
     return Inertia::render('Profile');
@@ -40,5 +38,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/api/ingredients', [IngredientsController::class, 'getIngredients']);
+
+Route::get('/api/bookmark', [BookmarkController::class, 'index'])->name('bookmark.index');
+Route::post('/api/bookmark', [BookmarkController::class, 'store'])->name('bookmark.store');
+Route::delete('/api/bookmark{$id}', [BookmarkController::class, 'destroy'])->name('bookmark.destroy');
 
 require __DIR__ . '/auth.php';

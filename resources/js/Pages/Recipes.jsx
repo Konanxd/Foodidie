@@ -125,9 +125,19 @@ export default function Recipes() {
                                     />
                                 </div>
                                 <div className="p-6">
-                                    <h3 className="text-lg font-semibold text-gray-800">
-                                        {recipe.title}
-                                    </h3>
+                                    <a
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            router.visit(
+                                                `details/${recipe.id_recipe}`,
+                                                recipe,
+                                            );
+                                        }}
+                                    >
+                                        <h3 className="text-lg font-semibold text-gray-800">
+                                            {recipe.title}
+                                        </h3>
+                                    </a>
                                     <div className="mt-2 flex items-center text-sm text-gray-500">
                                         <div className="flex items-center">
                                             <img
