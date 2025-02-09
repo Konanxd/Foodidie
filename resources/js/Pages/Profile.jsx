@@ -12,7 +12,14 @@ export default function Profile() {
                     <h2 className="text-xl font-bold">Ahmad Kasim</h2>
                     <p className="text-gray-600">Ahmadkasim@gmail.com</p>
                     </div>
-                    <button className="bg-[#679B85] text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                    <button className="bg-[#679B85] flex items-center text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                    <img
+                                    src={'../assets/edit-icon.png'}
+                                    alt="World"
+                                    className="mr-2 object-contain"
+                                    width={18}
+                                    height={18}
+                                />
                     Edit profile
                     </button>
                 </div>
