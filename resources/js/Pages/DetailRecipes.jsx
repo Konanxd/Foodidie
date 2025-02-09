@@ -40,7 +40,7 @@ function CollapsibleSection({ title, children }) {
 }
 
 export default function DetailRecipes() {
-    const { recipe, comments } = usePage().props;
+    const { recipe } = usePage().props;
 
     const breadcrumbs = [
         { label: 'Recipes', link: '/recipes' },
@@ -66,16 +66,19 @@ export default function DetailRecipes() {
                             &#127859;
                         </h3>
                         <div className="rounded-lg border border-gray-200 bg-white p-6">
-                            <ol className="list-inside list-decimal space-y-2 text-gray-700">
-                                {recipe.instructions.map((instruction) => (
-                                    <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
-                                        <span className="font-bold">
-                                            Step {instruction.number}
-                                        </span>
-                                        <br />
-                                        {instruction.step}
-                                    </li>
-                                ))}
+                            <p className="text-gray-700"></p>
+                            <ol className="list-inside list-decimal space-y-2">
+                                {recipe.analyzedInstructions[0].steps.map(
+                                    (instruction) => (
+                                        <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
+                                            <span className="font-bold">
+                                                Step {instruction.number}
+                                            </span>
+                                            <br />
+                                            {instruction.step}
+                                        </li>
+                                    ),
+                                )}
 
                                 {/* <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
                                     <span className="font-bold">
@@ -166,16 +169,18 @@ export default function DetailRecipes() {
                             </h3>
                             <div className="grid grid-cols-2 gap-4 text-gray-700">
                                 <ul className="space-y-1">
-                                    {recipe.ingredients.map((ingredient) => (
-                                        <li>{`${ingredient.name} ${ingredient.amount}${ingredient.unit}`}</li>
-                                    ))}
+                                    {recipe.nutritions.ingredients.map(
+                                        (ingredient) => (
+                                            <li>{`${ingredient.name} ${ingredient.amount}${ingredient.unit}`}</li>
+                                        ),
+                                    )}
                                 </ul>
                             </div>
                         </div>
 
                         {/* Vitamin Section */}
                         <div className="flex space-x-4">
-                            {recipe.nutritions
+                            {recipe.nutritions.nutrients
                                 .filter((vitamin) =>
                                     vitamin.includes('Vitamin'),
                                 )
@@ -189,7 +194,7 @@ export default function DetailRecipes() {
                         {/* Dropdown Nutritions */}
                         <CollapsibleSection title="Nutrition facts">
                             <div className="space-y-2 text-base text-gray-600">
-                                {recipe.nutritions
+                                {recipe.nutritions.nutrients
                                     .filter(
                                         (nutrition) =>
                                             !nutrition.includes('Vitamin'),
@@ -226,7 +231,7 @@ export default function DetailRecipes() {
                 </div>
 
                 {/* Comments */}
-                <div className="my-6 py-8">
+                {/* <div className="my-6 py-8">
                     <h2 className="mb-6 text-2xl font-bold">Comments</h2>
                     <div className="relative mb-6">
                         <textarea
@@ -272,10 +277,10 @@ export default function DetailRecipes() {
                             Load more..
                         </button>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Related Recipes */}
-                <div className="my-12">
+                {/* <div className="my-12">
                     <h3 className="mb-6 text-2xl font-bold text-gray-800">
                         Related Recipes
                     </h3>
@@ -308,7 +313,7 @@ export default function DetailRecipes() {
                             </a>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </section>
             <Footer />
         </GuestLayout>

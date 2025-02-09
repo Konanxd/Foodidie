@@ -39,20 +39,41 @@ class RecipesController extends Controller
         ]);
     }
 
-    public function details(Request $request, $id_recipe)
-    {
-        $recipe = $request->all();
+    // public function details(Request $request, $id_recipe)
+    // {
+    //     $recipe = $request->input('recipe', []);
 
-        $comments = Comment::where('id_recipe', $id_recipe)
-            ->with('user')
-            ->get()
-            ->toArray();
+    //     $comments = Comment::where('id_recipe', $id_recipe)
+    //         ->with('user')
+    //         ->get()
+    //         ->toArray();
+
+    //     return Inertia::render('DetailRecipes', [
+    //         'recipe' => $recipe,
+    //         'comments' => $comments
+    //     ]);
+    // }
+
+
+    public function details($id_recipe)
+    {
+        // Ambil data resep dari Spoonacular API
+        $recipe = $this->spoonacular->getInformationRecipes($id_recipe);
+
+        // Ambil komentar yang terkait dengan resep ini
+        // $comments = Comment::where('id_recipe', $id_recipe)
+        //     ->with('user')
+        //     ->get()
+        //     ->toArray();
+
+        // dd($recipe);
 
         return Inertia::render('DetailRecipes', [
             'recipe' => $recipe,
-            'comments' => $comments
+            // 'comments' => $comments
         ]);
     }
+
 
     public function getSearchHistory()
     {

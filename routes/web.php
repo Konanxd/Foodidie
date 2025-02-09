@@ -27,7 +27,7 @@ Route::get('/test', function () {
 
 Route::get('/recipes', [RecipesController::class, 'index'])->name('recipes');
 
-Route::get('/details/{id}', [RecipesController::class, 'details'])->name('detail-recipes');
+Route::get('/details/{id_recipe}', [RecipesController::class, 'details'])->name('recipe.details');
 
 Route::get('/profile', function () {
     return Inertia::render('Profile');

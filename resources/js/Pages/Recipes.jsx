@@ -4,7 +4,7 @@ import IngredientAutocomplete from '@/Components/IngredientAutocomplete';
 import Tag from '@/Components/Tag';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { router, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 const toTitleCase = (str) => {
@@ -125,19 +125,14 @@ export default function Recipes() {
                                     />
                                 </div>
                                 <div className="p-6">
-                                    <a
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            router.visit(
-                                                `details/${recipe.id_recipe}`,
-                                                recipe,
-                                            );
-                                        }}
+                                    <Link
+                                        href={route('recipe.details', {
+                                            id_recipe: recipe.id_recipe,
+                                        })}
+                                        className="text-lg font-semibold text-gray-800"
                                     >
-                                        <h3 className="text-lg font-semibold text-gray-800">
-                                            {recipe.title}
-                                        </h3>
-                                    </a>
+                                        {recipe.title}
+                                    </Link>
                                     <div className="mt-2 flex items-center text-sm text-gray-500">
                                         <div className="flex items-center">
                                             <img

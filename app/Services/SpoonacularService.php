@@ -39,7 +39,7 @@ class SpoonacularService
                 'fields' => 'id,title,readyInMinutes,creditsText,image,types,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
             ]);
 
-            dd($recipes->json());
+            // dd($recipes->json());
 
             if (!$recipes->successful()) {
                 return [];
@@ -60,78 +60,32 @@ class SpoonacularService
         });
     }
 
-
-
-    public function searchRecipesByIngredients(array $ingredients)
+    public function getInformationRecipes($id)
     {
-        $recipes = Http::get($this->baseUrl . "recipes/findByIngredients", [
-            'apiKey' => $this->apiKey,
-            'ingredients' => implode('+', $ingredients),
-            'fields' => 'id,title,readyInMinutes,servings'
-        ]);
+        $cacheKey = "recipes_information_" . $id;
+        return Cache::remember($cacheKey, now()->addHours(1), function () use ($id) {
 
-        if (!$recipes->successful()) {
-            return [];
-        }
+            $response = Http::get($this->baseUrl . "recipes/" . $id . "/information", [
+                'apiKey' => $this->apiKey,
+                'includeNutrition' => 'true',
+            ]);
 
-        $results = $recipes->json('results') ?? [];
-        $ids = collect($results)->pluck('id')->toArray();
+            $recipe = $response->json();
 
-        $bulk = Http::get($this->baseUrl . "recipes/informationBulk", [
-            'apiKey' => $this->apiKey,
-            'includeNutrition' => 'true',
-            'ids' => implode(',', $ids),
-            'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients',
-        ]);
+            if (!$recipe->successful()) {
+                return [];
+            }
 
-        if (!$bulk->successful()) {
-            return [];
-        }
-
-        return collect($bulk->json())->map(function ($recipe) {
-            $calories = collect($recipe['nutrition']['nutrients'])
-                ->where('name', 'Calories')
-                ->pluck('amount')
-                ->first();
-
-            // dd($recipe);
-
-            return [
-                'id' => $recipe['id'],
+            $result = [
                 'title' => $recipe['title'],
                 'readyInMinutes' => $recipe['readyInMinutes'],
-                'servings' => $recipe['servings'],
+                'credits' => $recipe['creditsText'],
                 'image' => $recipe['image'],
-                'calories' => $calories ?? 0,
+                'nutritions' => $recipe['nutrition']['nutrients'],
+                'ingredients' => $recipe['nutrition']['ingredients'],
+                'instructions' => $recipe['analyzedInstructions']
             ];
-        })->toArray();
-    }
-
-    public function getRecipeInformationById($id)
-    {
-        $response = Http::get($this->baseUrl . "recipes/$id/information", [
-            'apiKey' => $this->apiKey
-        ]);
-
-        return $response->json();
-    }
-
-    public function getRecipeInstructions($id)
-    {
-        $response = Http::get($this->baseUrl . "recipes/$id/instructions", [
-            'apiKey' => $this->apiKey
-        ]);
-
-        return $response->json();
-    }
-
-    public function searchIngredients($query)
-    {
-        $response = Http::get($this->baseUrl . "food/ingredients/", [
-            'apiKey' => $this->apiKey,
-            'query' => $query
-        ]);
-
-        return $response->json();
+            dd($result);
+        });
     }
 }
