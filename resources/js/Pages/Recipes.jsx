@@ -1,3 +1,4 @@
+import BookmarkButton from '@/Components/BookmarkButton';
 import Footer from '@/Components/Footer';
 import IngredientAutocomplete from '@/Components/IngredientAutocomplete';
 import Tag from '@/Components/Tag';
@@ -14,6 +15,7 @@ const toTitleCase = (str) => {
 
 export default function Recipes() {
     const {
+        bookmarks = [],
         recipes = [],
         searchQuery,
         selectedIngredients = [],
@@ -81,7 +83,8 @@ export default function Recipes() {
                             <div className="flex w-full items-center space-x-4">
                                 <IngredientAutocomplete
                                     onTagsChange={handleTagsChange}
-                                    selectedIngredients={selectedIngredients}
+                                    selectedItems={selectedIngredients}
+                                    inputType="ingredients"
                                 />
                             </div>
                             <button
@@ -92,32 +95,6 @@ export default function Recipes() {
                             </button>
                         </div>
                     </div>
-
-                    {/* <div className="mx-28 flex max-w-7xl flex-wrap gap-4">
-                        {[
-                            'Apple',
-                            'Sugar',
-                            'Flour',
-                            'Salt',
-                            'Trimmed rhubarb',
-                            'Noodles',
-                            'Onion',
-                            'Unsalted butter',
-                            'Butter',
-                            'Blueberry',
-                            'Lemon',
-                            'Nutmeg',
-                            'Egg',
-                            'Beef',
-                        ].map((category, index) => (
-                            <button
-                                key={index}
-                                className="rounded-full border-2 border-[#6AA78D] bg-white px-4 py-2 text-[#6AA78D] hover:bg-[#6AA78D] hover:text-white"
-                            >
-                                {category}
-                            </button>
-                        ))}
-                    </div> */}
                 </div>
             </section>
             <section>
@@ -131,7 +108,7 @@ export default function Recipes() {
                     <div className="mx-28 my-12 grid grid-cols-1 gap-8 md:grid-cols-3">
                         {recipes.map((recipe) => (
                             <div
-                                key={recipe.id}
+                                key={recipe.id_recipe}
                                 className="overflow-hidden rounded-xl bg-white shadow-sm"
                             >
                                 <div className="relative">
@@ -140,16 +117,12 @@ export default function Recipes() {
                                         alt={recipe.title}
                                         className="h-48 w-full object-cover"
                                     />
-                                    <button className="absolute right-3 top-3 rounded-full p-2 shadow-md backdrop-blur-lg">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="h-5 w-5 text-white hover:text-red-500"
-                                            fill="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                        </svg>
-                                    </button>
+                                    <BookmarkButton
+                                        recipe={recipe}
+                                        isBookmarkedInitially={bookmarks.includes(
+                                            recipe.id_recipe,
+                                        )}
+                                    />
                                 </div>
                                 <div className="p-6">
                                     <h3 className="text-lg font-semibold text-gray-800">

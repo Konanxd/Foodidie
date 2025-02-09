@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\SearchHistory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -20,62 +22,43 @@ class SpoonacularService
 
     public function searchRecipes(string $title, array $ingredients)
     {
-        $cacheKey = "recipes_search_{$title}";
+        $cacheKey = "recipes_search_" . md5($title . implode(',', $ingredients));
 
-        // if (Cache::has($cacheKey)) {
-        //     return Cache::get($cacheKey);
-        // }
+        return Cache::remember($cacheKey, now()->addHours(1), function () use ($title, $ingredients) {
+            $stringIngredients = empty($ingredients) ? '' : implode(',', $ingredients);
+            $title = empty($title) ? '' : $title;
 
-        $stringIngredients = empty($ingredients) ? '' : implode(',', $ingredients);
+            $recipes = Http::get($this->baseUrl . "recipes/complexSearch", [
+                'apiKey' => $this->apiKey,
+                'query' => $title,
+                'fillIngredients' => 'true',
+                'addRecipeNutrition' => 'true',
+                'addRecipeInstructions' => 'true',
+                'number' => 100,
+                'includeIngredients' => $stringIngredients,
+                'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
+            ]);
 
-        $title = empty($title) ? '' :  $title;
+            if (!$recipes->successful()) {
+                return [];
+            }
 
-        $recipes = Http::get($this->baseUrl . "recipes/complexSearch", [
-            'apiKey' => $this->apiKey,
-            'query' => $title,
-            'fillIngredients' => 'true',
-            'addRecipeNutrition' => 'true',
-            'addRecipeInstructions' => 'true',
-            'includeIngredients' => $stringIngredients,
-            'fields' => 'id,title,readyInMinutes,servings,image,nutrition.nutrients,nutrition.ingredients,analyzedInstructions.steps'
-        ]);
-
-        if (!$recipes->successful()) {
-            return [];
-        }
-
-        // $results = $recipes->json('results') ?? [];
-
-        $response = collect($recipes->json('results'))->map(function ($recipe) {
-            // $calories = collect($recipe['nutrition']['nutrients'])
-            //     ->where('name', 'Calories')
-            //     ->pluck('amount')
-            //     ->first();
-
-            // $ingredients = collect($recipe['missedIngredients'])
-            //     ->pluck('id')
-            //     ->toArray();
-
-            // dd($recipe);
-
-            return [
-                'id' => $recipe['id'],
-                'title' => $recipe['title'],
-                'readyInMinutes' => $recipe['readyInMinutes'],
-                'servings' => $recipe['servings'],
-                'image' => $recipe['image'],
-                'nutritions' => $recipe['nutrition']['nutrients'],
-                'ingredients' => $recipe['nutrition']['ingredients'],
-                'instruction' => $recipe['analyzedInstructions']
-            ];
-        })->toArray();
-
-        // dd($response);
-
-        // Cache::put($cacheKey, $response, now()->addHours(1));
-
-        return $response;
+            return collect($recipes->json('results'))->map(function ($recipe) {
+                return [
+                    'id_recipe' => $recipe['id'],
+                    'title' => $recipe['title'],
+                    'readyInMinutes' => $recipe['readyInMinutes'],
+                    'servings' => $recipe['servings'],
+                    'image' => $recipe['image'],
+                    'nutritions' => $recipe['nutrition']['nutrients'],
+                    'ingredients' => $recipe['nutrition']['ingredients'],
+                    'instruction' => $recipe['analyzedInstructions']
+                ];
+            })->toArray();
+        });
     }
+
+
 
     public function searchRecipesByIngredients(array $ingredients)
     {

@@ -1,33 +1,33 @@
 import { useEffect, useState } from 'react';
 import TextInput from './TextInput';
 
-const fetchIngredients = async (query) => {
+const fetchItems = async (query, item) => {
     try {
-        const response = await fetch(`/api/ingredients?query=${query}`);
+        const response = await fetch(`/api/${item}?query=${query}`);
 
         if (!response.ok) {
-            throw new Error('Failed to fetch ingredients');
+            throw new Error('Failed to fetch items');
         }
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching ingredients:', error);
+        console.error('Error fetching items:', error);
         return [];
     }
 };
 
-const IngredientAutocomplete = ({ onTagsChange, selectedIngredients }) => {
+const TextInputAutocomplete = ({ onTagsChange, selectedItems, inputType }) => {
     const [inputValue, setInputValue] = useState('');
-    const [selectedTags, setSelectedTags] = useState(selectedIngredients || []);
-    const [ingredients, setIngredients] = useState([]);
+    const [selectedTags, setSelectedTags] = useState(selectedItems || []);
+    const [items, setItems] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
 
     console.log(selectedTags);
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchIngredients('');
-            setIngredients(data);
+            const data = await fetchItems('', inputType);
+            setItems(data);
         };
 
         fetchData();
@@ -35,14 +35,14 @@ const IngredientAutocomplete = ({ onTagsChange, selectedIngredients }) => {
 
     useEffect(() => {
         if (inputValue.length >= 2) {
-            const filtered = ingredients.filter((ingredient) =>
+            const filtered = items.filter((ingredient) =>
                 ingredient.toLowerCase().includes(inputValue.toLowerCase()),
             );
             setSuggestions(filtered);
         } else {
             setSuggestions([]);
         }
-    }, [inputValue, ingredients]);
+    }, [inputValue, items]);
 
     const handleSelectTag = (tag) => {
         if (!selectedTags.includes(tag)) {
@@ -84,19 +84,23 @@ const IngredientAutocomplete = ({ onTagsChange, selectedIngredients }) => {
                 </div>
             )}
 
-            <div className="my-4 flex max-w-7xl flex-wrap gap-4">
-                {selectedTags.map((tag, index) => (
-                    <button
-                        key={index}
-                        onClick={() => handleRemoveTag(tag)}
-                        className="rounded-full border-2 border-[#6AA78D] bg-white px-4 py-2 text-[#6AA78D] hover:bg-[#6AA78D] hover:text-white"
-                    >
-                        {tag}
-                    </button>
-                ))}
-            </div>
+            {inputType === 'ingredients' ? (
+                <div className="my-4 flex max-w-7xl flex-wrap gap-4">
+                    {selectedTags.map((tag, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handleRemoveTag(tag)}
+                            className="rounded-full border-2 border-[#6AA78D] bg-white px-4 py-2 text-[#6AA78D] hover:bg-[#6AA78D] hover:text-white"
+                        >
+                            {tag}
+                        </button>
+                    ))}
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 };
 
-export default IngredientAutocomplete;
+export default TextInputAutocomplete;
