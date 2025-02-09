@@ -33,6 +33,10 @@ Route::get('/profile', function () {
     return Inertia::render('Profile');
 })->name('profile');
 
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
 Route::middleware('auth')->group(function () {
     Route::get('/edit-profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/edit-profile', [ProfileController::class, 'update'])->name('profile.update');
