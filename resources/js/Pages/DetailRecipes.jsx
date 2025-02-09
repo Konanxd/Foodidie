@@ -68,41 +68,24 @@ export default function DetailRecipes() {
                         <div className="rounded-lg border border-gray-200 bg-white p-6">
                             <p className="text-gray-700"></p>
                             <ol className="list-inside list-decimal space-y-2">
-                                {recipe.analyzedInstructions[0].steps.map(
-                                    (instruction) => (
-                                        <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
-                                            <span className="font-bold">
-                                                Step {instruction.number}
-                                            </span>
-                                            <br />
-                                            {instruction.step}
-                                        </li>
-                                    ),
-                                )}
-
-                                {/* <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
-                                    <span className="font-bold">
-                                        Coat the chicken:
-                                    </span>
-                                    <br />
-                                    Add flour and cornstarch to the chicken and
-                                    mix well.
-                                </li>
-                                <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
-                                    <span className="font-bold">
-                                        Fry the chicken:
-                                    </span>
-                                    <br />
-                                    Heat oil in a frying pan and fry the chicken
-                                    until golden brown.
-                                </li>
-                                <li className="[&::marker]:font-bold [&::marker]:text-[#679B85]">
-                                    <span className="font-bold">Serve:</span>
-                                    <br />
-                                    Serve the fried chicken with optional
-                                    toppings.
-                                </li> */}
-                            </ol>
+    {recipe.instructions?.flatMap((instruction, groupIndex) => 
+        instruction.steps?.map((step, stepIndex) => {
+            console.log('Step:', step); // Debugging log
+            return (
+                <li
+                    key={`${groupIndex}-${step.number}`}
+                    className="[&::marker]:font-bold [&::marker]:text-[#679B85]"
+                >
+                    <span className="font-bold">
+                        Step {step.number}
+                    </span>
+                    <br />
+                    <p>{step.step}</p>
+                </li>
+            );
+        }) ?? []
+    )}
+</ol>
                         </div>
                     </div>
 
@@ -146,59 +129,68 @@ export default function DetailRecipes() {
                             </div>
                         </div>
                         <div className="flex items-center space-x-4 text-sm text-gray-500">
-                            <span>Ready In: {recipe.readyInMinutes}</span>
+                            <span>Ready In: {recipe.readyInMinutes} Minutes</span>
                         </div>
 
                         <div className="gap-x-12">
                             <p>
-                                <span className="font-semibold">Credits:</span>
+                                <span className="font-semibold">Credits : </span>
                                 {recipe.credits}
                             </p>
                             <p>
                                 <span className="font-semibold">
-                                    Type of meals:
-                                </span>
+                                    Type of meals :     </span>
                                 {recipe.types ?? 'unknown'}
                             </p>
                         </div>
 
                         {/* Ingredients Section */}
-                        <div>
+                        {/* <div>
                             <h3 className="mb-4 text-2xl font-semibold text-gray-800">
                                 Ingredients:
                             </h3>
                             <div className="grid grid-cols-2 gap-4 text-gray-700">
                                 <ul className="space-y-1">
-                                    {recipe.nutritions.ingredients.map(
-                                        (ingredient) => (
-                                            <li>{`${ingredient.name} ${ingredient.amount}${ingredient.unit}`}</li>
+                                    {recipe.ingredients.map(
+                                        (ingredient, index) => (
+                                            <li className='' key={index}>{`${ingredient.name} ${ingredient.amount}${ingredient.unit}`}</li>
                                         ),
                                     )}
                                 </ul>
                             </div>
+                        </div> */}
+
+                        {/* Ingredients Section */}
+                        <div>
+                            <h3 className="mb-4 text-2xl font-semibold text-gray-800 border-b border-[#679B85] pb-2">
+                                Ingredients:
+                            </h3>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                {recipe.ingredients?.map((ingredient, index) => (
+                                    <div key={index} className="flex items-start gap-2">
+                                        <span className="text-gray-700">
+                                            {ingredient.amount} {ingredient.unit} {ingredient.name} 
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                         {/* Vitamin Section */}
-                        <div className="flex space-x-4">
-                            {recipe.nutritions.nutrients
-                                .filter((vitamin) =>
-                                    vitamin.includes('Vitamin'),
-                                )
-                                .map((vitamin) => (
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#679B85] text-white">
-                                        {vitamin.charAt(8)}
+                        {/* <div className="flex space-x-4">
+                            {recipe.nutritions
+                                .map((vitamin, index) => (
+                                    <div key={index}className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#679B85] text-white">
+                                        {vitamin.name}
                                     </div>
                                 ))}
-                        </div>
+                        </div> */}
 
                         {/* Dropdown Nutritions */}
                         <CollapsibleSection title="Nutrition facts">
                             <div className="space-y-2 text-base text-gray-600">
-                                {recipe.nutritions.nutrients
-                                    .filter(
-                                        (nutrition) =>
-                                            !nutrition.includes('Vitamin'),
-                                    )
+                                {recipe.nutritions
                                     .map((nutrition, index) => (
                                         <>
                                             <div
@@ -214,7 +206,7 @@ export default function DetailRecipes() {
                             </div>
                         </CollapsibleSection>
 
-                        {/* Minerals Section */}
+                        {/* Minerals Section
                         <CollapsibleSection title="Minerals">
                             <p className="text-gray-600">
                                 Details about minerals will go here.
@@ -222,98 +214,14 @@ export default function DetailRecipes() {
                         </CollapsibleSection>
 
                         {/* Vitamins Section */}
-                        <CollapsibleSection title="Vitamins">
+                        {/* <CollapsibleSection title="Vitamins">
                             <p className="text-gray-600">
                                 Details about vitamins will go here.
                             </p>
-                        </CollapsibleSection>
+                        </CollapsibleSection>  */}
                     </div>
                 </div>
 
-                {/* Comments */}
-                {/* <div className="my-6 py-8">
-                    <h2 className="mb-6 text-2xl font-bold">Comments</h2>
-                    <div className="relative mb-6">
-                        <textarea
-                            className="h-40 w-full rounded-lg border border-gray-300 bg-transparent p-4 pr-16 focus:outline-none focus:ring focus:ring-[#679B85]"
-                            rows="3"
-                            placeholder="Write your comment here.."
-                        ></textarea>
-                        <button className="absolute bottom-4 right-4 rounded-lg bg-[#679B85] px-4 py-2 font-semibold text-white hover:bg-green-700">
-                            Submit
-                        </button>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {comments.length === 0 ? (
-                            <h1>No comments yet.</h1>
-                        ) : (
-                            comments.map((comment) => (
-                                <div
-                                    key={comment.id}
-                                    className="relative rounded-lg border bg-white p-8 shadow-sm"
-                                >
-                                    <img
-                                        src={'../assets/quote-icon.png'}
-                                        alt="World"
-                                        className="absolute right-4 top-4 h-8 w-8"
-                                        width={18}
-                                        height={18}
-                                    />
-                                    <h3 className="text-lg font-semibold">
-                                        {comment.user.name}
-                                    </h3>
-                                    <p className="mt-2 text-gray-600">
-                                        {comment.content}
-                                    </p>
-                                    <p className="mt-4 text-sm text-gray-500">
-                                        {comment.created_at}
-                                    </p>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                    <div className="mt-8 text-center">
-                        <button className="font-semibold text-[#679B85] hover:underline">
-                            Load more..
-                        </button>
-                    </div>
-                </div> */}
-
-                {/* Related Recipes */}
-                {/* <div className="my-12">
-                    <h3 className="mb-6 text-2xl font-bold text-gray-800">
-                        Related Recipes
-                    </h3>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {[
-                            {
-                                title: 'Rendang',
-                                img: 'https://asset.kompas.com/crops/QsUYn6p5xK4DsivCrxa0_TXdjuk=/10x36:890x623/1200x800/data/photo/2023/03/25/641e5ef63dea4.jpg',
-                                link: '#',
-                            },
-                        ].map((recipe, index) => (
-                            <a
-                                href={recipe.link}
-                                key={index}
-                                className="block overflow-hidden rounded-lg bg-white transition hover:shadow-xl"
-                            >
-                                <img
-                                    src={recipe.img}
-                                    alt={recipe.title}
-                                    className="h-32 w-full object-cover"
-                                />
-                                <div className="p-4">
-                                    <h4 className="text-lg font-semibold text-gray-800">
-                                        {recipe.title}
-                                    </h4>
-                                    <p className="mt-2 text-[#679B85]">
-                                        See recipe ›
-                                    </p>
-                                </div>
-                            </a>
-                        ))}
-                    </div>
-                </div> */}
             </section>
             <Footer />
         </GuestLayout>

@@ -22,9 +22,9 @@ class SpoonacularService
 
     public function searchRecipes(string $title, array $ingredients)
     {
-        $cacheKey = "recipes_search_" . md5($title . implode(',', $ingredients));
+        // $cacheKey = "recipes_search_" . md5($title . implode(',', $ingredients));
 
-        return Cache::remember($cacheKey, now()->addHours(1), function () use ($title, $ingredients) {
+        // return Cache::remember($cacheKey, now()->addHours(1), function () use ($title, $ingredients) {
             $stringIngredients = empty($ingredients) ? '' : implode(',', $ingredients);
             $title = empty($title) ? '' : $title;
 
@@ -57,24 +57,18 @@ class SpoonacularService
                     'instructions' => $recipe['analyzedInstructions']
                 ];
             })->toArray();
-        });
+        // });
     }
 
     public function getInformationRecipes($id)
     {
-        $cacheKey = "recipes_information_" . $id;
-        return Cache::remember($cacheKey, now()->addHours(1), function () use ($id) {
-
+        
             $response = Http::get($this->baseUrl . "recipes/" . $id . "/information", [
                 'apiKey' => $this->apiKey,
                 'includeNutrition' => 'true',
             ]);
 
             $recipe = $response->json();
-
-            if (!$recipe->successful()) {
-                return [];
-            }
 
             $result = [
                 'title' => $recipe['title'],
@@ -85,7 +79,8 @@ class SpoonacularService
                 'ingredients' => $recipe['nutrition']['ingredients'],
                 'instructions' => $recipe['analyzedInstructions']
             ];
-            dd($result);
-        });
+            
+            return $result;
+        
     }
 }
