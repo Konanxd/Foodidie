@@ -49,7 +49,7 @@ export default function DetailRecipes() {
             <section className="px-28 pt-6">
                 <Breadcrumb items={breadcrumbs} />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div className="grid grid-cols-1 md:grid-cols-3">
                     {/* Left Section */}
                     <div className="md:col-span-1 space-y-6">
                         <img
@@ -87,7 +87,7 @@ export default function DetailRecipes() {
                     </div>
 
                     {/* Right Section */}
-                    <div className="md:col-span-2 space-y-6">
+                    <div className="md:col-span-2 space-y-6 ml-32">
                     <div className="flex items-center space-x-2">
                         <h2 className="mr-52 text-4xl font-bold text-gray-800">Telur Dadar</h2>
                         <div className='group'>
